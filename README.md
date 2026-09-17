@@ -491,13 +491,15 @@ python -m pytest -v     # verbose per-test output
 
 Constraints supported by the code and specification — stated plainly, without invention:
 
-- **Environment sensitivity.** Recognition degrades under poor lighting, extreme pose, or low resolution; this affects the handcrafted OpenCV embedding most. The enrollment validator exists to mitigate it.
-- **No liveness detection.** A printed photograph can match a live face. Anti-spoofing is explicitly out of scope (PRD Section 5).
-- **Fallback accuracy gap.** The OpenCV 128-d descriptor is deterministic but far less discriminative than dlib ResNet embeddings; the shared `0.6` threshold may need per-backend tuning.
-- **Local single-machine scope.** No authentication, multi-camera, multi-room, cloud sync, or mobile client — by design.
-- **Linear matching cost.** Embedding comparison is O(n) over stored references: fine for tens of users, unsuitable for thousands without an index.
-- **Name as natural key.** Duplicate names are ambiguous; the PRD proposes a future `face_id` foreign key.
-- **Missing diagrams.** The architecture, ER, use-case, and sequence diagrams listed in PRD Section 14 are not yet present under `docs/`.
+| # | Limitation | Details |
+| - | ---------- | ------- |
+| 1 | Environment sensitivity | Recognition degrades under poor lighting, extreme pose, or low resolution; this affects the handcrafted OpenCV embedding most. The enrollment validator exists to mitigate it. |
+| 2 | 🎭 No liveness detection | A printed photograph can match a live face. Anti-spoofing is explicitly out of scope (PRD Section 5). |
+| 3 | 📉 Fallback accuracy gap | The OpenCV 128-d descriptor is deterministic but far less discriminative than dlib ResNet embeddings; the shared `0.6` threshold may need per-backend tuning. |
+| 4 | 💻 Local single-machine scope | No authentication, multi-camera, multi-room, cloud sync, or mobile client — by design. |
+| 5 | 📈 Linear matching cost | Embedding comparison is O(n) over stored references: fine for tens of users, unsuitable for thousands without an index. |
+| 6 | 🏷️ Name as natural key | Duplicate names are ambiguous; the PRD proposes a future `face_id` foreign key. |
+| 7 | 🖼️ Missing diagrams | The architecture, ER, use-case, and sequence diagrams listed in PRD Section 14 are not yet present under `docs/`. |
 
 ---
 
@@ -505,14 +507,16 @@ Constraints supported by the code and specification — stated plainly, without 
 
 Realistic extensions, kept separate from shipped functionality:
 
-- Liveness and anti-spoofing (blink challenge, texture analysis, or depth cues).
-- Stronger embeddings (FaceNet / ArcFace via ONNX) with cosine similarity and per-backend threshold calibration.
-- Temporal identity smoothing and face tracking to stabilize the live feed.
-- Admin authentication and roles; multi-camera and multi-room support; cloud backup.
-- `face_id` foreign key, photo deduplication, and vector indexing (e.g., FAISS) for scale.
-- REST API for HRMS integration; packaged kiosk and mobile clients.
-- Measured evaluation harness (precision, recall, FAR/FRR, latency) to replace qualitative assessment.
-- Populated `docs/` with the four PRD diagrams plus annotated demo screenshots.
+| # | Enhancement | Details |
+| - | ----------- | ------- |
+| 1 | Liveness and anti-spoofing | Blink challenge, texture analysis, or depth cues to reject printed-photo spoofs. |
+| 2 | Stronger embeddings | FaceNet / ArcFace via ONNX with cosine similarity and per-backend threshold calibration. |
+| 3 | Face tracking | Temporal identity smoothing and tracking to stabilize the live feed. |
+| 4 | Access and scale-out | Admin authentication and roles; multi-camera and multi-room support; cloud backup. |
+| 5 | Data model and indexing | `face_id` foreign key, photo deduplication, and vector indexing (e.g., FAISS) for scale. |
+| 6 | Integrations | REST API for HRMS integration; packaged kiosk and mobile clients. |
+| 7 | Evaluation harness | Measured precision, recall, FAR/FRR, and latency to replace qualitative assessment. |
+| 8 | Documentation | Populated `docs/` with the four PRD diagrams plus annotated demo screenshots. |
 
 ---
 
@@ -520,13 +524,15 @@ Realistic extensions, kept separate from shipped functionality:
 
 Concepts directly exercised by this implementation:
 
-- Image processing: color-space conversion, resizing, histogram equalization, Sobel gradients, padded cropping.
-- Face detection paradigms: HOG and CNN detectors versus Haar cascades, and their speed/accuracy trade-offs.
-- Metric-space recognition: normalized embeddings, Euclidean nearest neighbors, threshold classification.
-- Data engineering: relational schema design, binary vector storage, uniqueness constraints, parameterized queries, Pandas analytics.
-- Systems design: layered modular architecture, centralized configuration, dual-backend resilience, graceful degradation.
-- Applied UX for vision systems: real-time overlays, confidence display, input validators, roster analytics, CSV and log ergonomics.
-- Software quality: unit and integration testing, audit logging, duplicate-safe writes, input validation.
+| # | Area | Concepts exercised |
+| - | ---- | ------------------ |
+| 1 | Image processing | Color-space conversion, resizing, histogram equalization, Sobel gradients, padded cropping. |
+| 2 | Face detection paradigms | HOG and CNN detectors versus Haar cascades, and their speed/accuracy trade-offs. |
+| 3 | Metric-space recognition | Normalized embeddings, Euclidean nearest neighbors, threshold classification. |
+| 4 | Data engineering | Relational schema design, binary vector storage, uniqueness constraints, parameterized queries, Pandas analytics. |
+| 5 | Systems design | Layered modular architecture, centralized configuration, dual-backend resilience, graceful degradation. |
+| 6 | Applied UX for vision systems | Real-time overlays, confidence display, input validators, roster analytics, CSV and log ergonomics. |
+| 7 | Software quality | Unit and integration testing, audit logging, duplicate-safe writes, input validation. |
 
 ---
 
@@ -534,14 +540,16 @@ Concepts directly exercised by this implementation:
 
 Only sources connected to artifacts actually used or cited in this repository:
 
-- OpenCV documentation — image and video operations, Haar cascades, Sobel: <https://docs.opencv.org>
-- `face_recognition` by Adam Geitgey (dlib) — HOG/CNN detection and 128-d encodings: <https://github.com/ageitgey/face_recognition>
-- Streamlit documentation — camera input, tabs, caching, downloads: <https://docs.streamlit.io>
-- Altair visualization library: <https://altair-viz.github.io>
-- Pandas, NumPy, Matplotlib: <https://pandas.pydata.org> · <https://numpy.org> · <https://matplotlib.org>
-- SQLite documentation: <https://www.sqlite.org/docs.html>
-- Pytest documentation: <https://docs.pytest.org>
-- In-repo specification: `Face_Attendance_System_PRD.md`, `statement.md`
+| # | Resource | Covers | Link |
+| - | -------- | ------ | ---- |
+| 1 | OpenCV documentation | Image and video operations, Haar cascades, Sobel | <https://docs.opencv.org> |
+| 2 | `face_recognition` by Adam Geitgey (dlib) | HOG/CNN detection and 128-d encodings | <https://github.com/ageitgey/face_recognition> |
+| 3 | Streamlit documentation | Camera input, tabs, caching, downloads | <https://docs.streamlit.io> |
+| 4 | Altair visualization library | Declarative charts | <https://altair-viz.github.io> |
+| 5 | Pandas · NumPy · Matplotlib | Data analysis, numerics, plotting | <https://pandas.pydata.org> · <https://numpy.org> · <https://matplotlib.org> |
+| 6 | SQLite documentation | SQL syntax, constraints, indexes | <https://www.sqlite.org/docs.html> |
+| 7 | Pytest documentation | Test running, fixtures, assertions | <https://docs.pytest.org> |
+| 8 | In-repo specification | `Face_Attendance_System_PRD.md`, `statement.md` | — |
 
 ---
 
