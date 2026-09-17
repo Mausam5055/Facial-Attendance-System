@@ -23,6 +23,25 @@
 
 ---
 
+## 🖼️ Application Interface & System Previews
+
+<div align="center">
+
+| 📷 1. Biometric Kiosk Scanner | 🎯 2. Real-Time Face Recognition |
+| :---: | :---: |
+| [![Biometric Kiosk Scanner](docs/screenshots/01_kiosk_webcam_scanner.png)](docs/screenshots/01_kiosk_webcam_scanner.png) | [![Real-Time Face Recognition](docs/screenshots/02_face_recognition_match.png)](docs/screenshots/02_face_recognition_match.png) |
+| *Webcam snapshot, photo upload & today's check-in activity* | *Real-time bounding box detection, match score & instant verification* |
+| **🧑 3. Member Face Enrollment** | **📊 4. Attendance Intelligence & Reports** |
+| [![Member Face Enrollment](docs/screenshots/03_face_enrollment_directory.png)](docs/screenshots/03_face_enrollment_directory.png) | [![Attendance Intelligence & Reports](docs/screenshots/04_attendance_intelligence_reports.png)](docs/screenshots/04_attendance_intelligence_reports.png) |
+| *Single-face quality validation, photo capture & directory* | *Daily KPI analytics, presence logs, confidence scores & CSV export* |
+| **⚙️ 5. System Diagnostics & Storage** | **📜 6. Application Audit Logs** |
+| [![System Diagnostics & Storage](docs/screenshots/05_system_diagnostics_storage.png)](docs/screenshots/05_system_diagnostics_storage.png) | [![Application Audit Logs](docs/screenshots/06_audit_logs_monitoring.png)](docs/screenshots/06_audit_logs_monitoring.png) |
+| *SQLite database metrics, reference store & engine status* | *Live application audit stream, search filters & log levels* |
+
+</div>
+
+---
+
 ## 📑 Contents
 
 | # | Section | Description |
@@ -226,7 +245,9 @@ Facial Attendance System/
 │   └── config.toml               # Theme, server port 8501, minimal toolbar
 ├── logs/
 │   └── app.log                   # Runtime audit log (created at runtime, gitignored)
-├── docs/                         # Reserved for architecture / ER / use-case / sequence diagrams
+├── docs/
+│   └── screenshots/              # High-resolution application preview screenshots (2×3 matrix)
+├── Preview images/               # App preview captures
 └── README.md                     # This file
 ```
 
