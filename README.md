@@ -29,25 +29,26 @@
 | - | ------- | ----------- |
 | 1 | [🔭 Overview](#-overview) | What the system does, who it serves, and how the four app tabs fit together |
 | 2 | [🎓 Assignment Details](#-assignment-details) | Institution, event, specification sources, and submission status |
-| 3 | [✨ Key Features](#-key-features) | Kiosk scanner, enrollment, attendance intelligence, and reliability |
-| 4 | [🎯 Problem Statement and Objectives](#-problem-statement-and-objectives) | The manual-attendance problem and the five implemented objectives |
-| 5 | [👁️ Computer Vision Concepts](#-computer-vision-concepts) | Detection, embeddings, matching, and preprocessing techniques used |
-| 6 | [🛠️ Technology Stack](#-technology-stack) | Languages, libraries, storage, and tooling with versions and roles |
-| 7 | [📁 Project Structure](#-project-structure) | Annotated directory tree and file responsibilities |
-| 8 | [🏗️ System Architecture](#-system-architecture) | Three-layer design with a Mermaid architecture diagram |
-| 9 | [🔄 Workflow](#-workflow) | Enrollment, recognition, and reporting flows with a Mermaid pipeline |
-| 10 | [🧠 Implementation Details](#-implementation-details) | Module-by-module internals (expandable sections) |
-| 11 | [🗄️ Database Schema](#-database-schema) | `known_faces` and `attendance` tables, indexes, and constraints |
-| 12 | [⚙️ Installation](#-installation) | Environment setup, dependencies, and configuration reference |
-| 13 | [▶️ Usage](#-usage) | Launching the portal and walking through a typical session |
-| 14 | [📥 Input and Output](#-input-and-output) | Supported inputs and every output the system produces |
-| 15 | [📊 Results](#-results) | Verified behavior and how to generate your own evidence |
-| 16 | [🧪 Testing](#-testing) | The 13-test pytest suite and what each file covers |
-| 17 | [⚠️ Limitations](#-limitations) | Honest constraints supported by the code and specification |
-| 18 | [🔮 Future Work](#-future-work) | Realistic extensions, separated from shipped functionality |
-| 19 | [🎓 Learning Outcomes](#-learning-outcomes) | CV and engineering concepts exercised by this implementation |
-| 20 | [📚 References](#-references) | Documentation for every library and spec actually used |
-| 21 | [👤 Author](#-author) | Developer, institution, and submission information |
+| 3 | [🌐 Live Demo — Note for Evaluators](#-live-demo--note-for-evaluators) | Hosted deployment guide and important evaluation notes |
+| 4 | [✨ Key Features](#-key-features) | Kiosk scanner, enrollment, attendance intelligence, and reliability |
+| 5 | [🎯 Problem Statement and Objectives](#-problem-statement-and-objectives) | The manual-attendance problem and the five implemented objectives |
+| 6 | [👁️ Computer Vision Concepts](#-computer-vision-concepts) | Detection, embeddings, matching, and preprocessing techniques used |
+| 7 | [🛠️ Technology Stack](#-technology-stack) | Languages, libraries, storage, and tooling with versions and roles |
+| 8 | [📁 Project Structure](#-project-structure) | Annotated directory tree and file responsibilities |
+| 9 | [🏗️ System Architecture](#-system-architecture) | Three-layer design with a Mermaid architecture diagram |
+| 10 | [🔄 Workflow](#-workflow) | Enrollment, recognition, and reporting flows with a Mermaid pipeline |
+| 11 | [🧠 Implementation Details](#-implementation-details) | Module-by-module internals (expandable sections) |
+| 12 | [🗄️ Database Schema](#-database-schema) | `known_faces` and `attendance` tables, indexes, and constraints |
+| 13 | [⚙️ Installation](#-installation) | Environment setup, dependencies, and configuration reference |
+| 14 | [▶️ Usage](#-usage) | Launching the portal and walking through a typical session |
+| 15 | [📥 Input and Output](#-input-and-output) | Supported inputs and every output the system produces |
+| 16 | [📊 Results](#-results) | Verified behavior and how to generate your own evidence |
+| 17 | [🧪 Testing](#-testing) | The 13-test pytest suite and what each file covers |
+| 18 | [⚠️ Limitations](#-limitations) | Honest constraints supported by the code and specification |
+| 19 | [🔮 Future Work](#-future-work) | Realistic extensions, separated from shipped functionality |
+| 20 | [🎓 Learning Outcomes](#-learning-outcomes) | CV and engineering concepts exercised by this implementation |
+| 21 | [📚 References](#-references) | Documentation for every library and spec actually used |
+| 22 | [👤 Author](#-author) | Developer, institution, and submission information |
 
 ---
 
@@ -83,6 +84,41 @@ Built in compliance with the in-repo PRD (`Face_Attendance_System_PRD.md`) and p
 | Core Technologies | Python, OpenCV, Streamlit, NumPy, Pandas, Matplotlib, Altair, SQLite, Pytest |
 | Optional Component | `face_recognition` (dlib) — high-accuracy backend |
 | Submission Status | Submitted |
+
+---
+
+## 🌐 Live Demo — Note for Evaluators
+
+> Dear evaluator: this project runs both **locally** and as a **hosted web app**. This section covers the hosted deployment and everything needed to evaluate it fairly.
+
+### 🚀 Hosted Deployment (Streamlit Community Cloud)
+
+| Item | Details |
+| ---- | ------- |
+| Platform | [Streamlit Community Cloud](https://share.streamlit.io) (free hosting for Streamlit apps) |
+| Repository | `Mausam5055/Facial-Attendance-System` (branch `main`) |
+| Entry point | `app.py` |
+| Live URL | `https://facial-attendance-system.streamlit.app` *(assigned at deploy time; if the subdomain differs, use the URL shown on the Cloud dashboard)* |
+
+**Deploy steps (2 minutes):** sign in to [share.streamlit.io](https://share.streamlit.io) with GitHub → Create app → select the repository, branch `main`, and main file `app.py` → Deploy. The first build takes 3–5 minutes.
+
+**Cloud-build readiness (already handled in this repo):**
+
+| Concern | How it is handled |
+| ------- | ----------------- |
+| No GUI libraries on cloud containers | `requirements.txt` uses `opencv-python-headless` instead of `opencv-python`; the app never opens an OpenCV window, so behavior is identical |
+| Chart dependency | `altair` is pinned explicitly since `app.py` imports it directly |
+| Heavy dlib build | `face_recognition` stays optional and commented out, so the cloud build never compiles dlib — the app automatically runs on the built-in OpenCV backend there |
+
+### 📌 Important Evaluation Notes
+
+| # | Note | Why it matters |
+| - | ---- | -------------- |
+| 1 | 🖥️ The cloud server has **no webcam** — evaluate the Kiosk Scanner via **Upload Photo** mode (single or group photo), and enroll members via **image upload** rather than webcam capture | Webcam Snapshot and Live Feed require a client camera and only work in the local run |
+| 2 | 💾 Hosted storage is **ephemeral** — enrolled faces and attendance records reset if the app reboots or sleeps | For repeatable evaluation, enroll fresh members each session; the local run persists everything in `database/attendance.db` |
+| 3 | 🔄 The cloud deployment runs the **OpenCV fallback backend** (Haar + handcrafted 128-d embedding), not the dlib backend | This is the correct, supported configuration — matching threshold and behavior are unchanged |
+| 4 | ✅ For the full experience (webcam + live feed + persistent data), run locally with `python -m streamlit run app.py` | See [⚙️ Installation](#-installation) and [▶️ Usage](#-usage) |
+| 5 | 🧪 Correctness is covered by **13 automated pytest tests** (`python -m pytest`) covering embeddings, enrollment, matching, duplicate prevention, roster, and CSV export | See [🧪 Testing](#-testing) |
 
 ---
 
