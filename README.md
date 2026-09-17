@@ -4,16 +4,18 @@
 
 **Automated biometric attendance portal built with Computer Vision — face detection, 128-dimensional face embeddings, and Euclidean-distance matching with duplicate-proof daily logging, roster analytics, and a Streamlit kiosk interface.**
 
-[![Status](https://img.shields.io/badge/status-submitted-brightgreen?style=flat-square)](.)
-[![Assignment](https://img.shields.io/badge/assignment-computer_vision-blueviolet?style=flat-square)](.)
-[![Institution](https://img.shields.io/badge/institution-VIT_Bhopal-blue?style=flat-square)](.)
-[![Event](https://img.shields.io/badge/event-VITyarthi-orange?style=flat-square)](.)
+[![Status](https://img.shields.io/badge/Status-Submitted-brightgreen?style=for-the-badge)](.)
+[![Assignment](https://img.shields.io/badge/Computer_Vision-Assignment-blueviolet?style=for-the-badge)](.)
+[![Institution](https://img.shields.io/badge/VIT_Bhopal-Institution-blue?style=for-the-badge)](.)
+[![Event](https://img.shields.io/badge/VITyarthi-Event-orange?style=for-the-badge)](.)
 <br>
-[![Python](https://img.shields.io/badge/python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](.)
-[![OpenCV](https://img.shields.io/badge/opencv-4.8+-5C3EE8?style=flat-square&logo=opencv&logoColor=white)](.)
-[![Streamlit](https://img.shields.io/badge/streamlit-1.32+-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](.)
-[![SQLite](https://img.shields.io/badge/sqlite-built_in-003B57?style=flat-square&logo=sqlite&logoColor=white)](.)
-[![Pytest](https://img.shields.io/badge/pytest-7.0+-0A9EDC?style=flat-square&logo=pytest&logoColor=white)](.)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](.)
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.8+-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)](.)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.32+-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](.)
+[![NumPy](https://img.shields.io/badge/NumPy-1.24+-013243?style=for-the-badge&logo=numpy&logoColor=white)](.)
+[![Pandas](https://img.shields.io/badge/Pandas-2.0+-150458?style=for-the-badge&logo=pandas&logoColor=white)](.)
+[![SQLite](https://img.shields.io/badge/SQLite-Built_in-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](.)
+[![Pytest](https://img.shields.io/badge/Pytest-7.0+-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)](.)
 
 *Developed as a Computer Vision assignment for **VITyarthi** at **VIT Bhopal**. This README documents the actual implementation in this repository — no invented features or metrics.*
 
@@ -21,7 +23,7 @@
 
 ---
 
-## Contents
+## 📑 Contents
 
 - [Overview](#overview)
 - [Assignment Details](#assignment-details)
@@ -47,7 +49,7 @@
 
 ---
 
-## Overview
+## 🔭 Overview
 
 Manual attendance — roll calls and sign-in sheets — is slow, vulnerable to proxy marking, and difficult to audit. This project replaces it with a **desktop/web-based Face Recognition Attendance System**: an enrolled user faces a webcam (or uploads a photo), and the system detects faces, encodes each into a **128-dimensional embedding**, matches it against enrolled references using **Euclidean distance** (threshold `0.6`), and logs `{name, date, time, confidence}` into SQLite with **per-day duplicate prevention**.
 
@@ -64,7 +66,7 @@ Built in compliance with the in-repo PRD (`Face_Attendance_System_PRD.md`) and p
 
 ---
 
-## Assignment Details
+## 🎓 Assignment Details
 
 | Field | Details |
 | ----- | ------- |
@@ -79,7 +81,7 @@ Built in compliance with the in-repo PRD (`Face_Attendance_System_PRD.md`) and p
 
 ---
 
-## Key Features
+## ✨ Key Features
 
 **Multi-mode kiosk scanner.** Three check-in paths share one recognition pipeline: instant webcam snapshots with real-time bounding boxes and match-confidence badges, single/group photo upload (every face in the frame is matched independently), and a continuous OpenCV live-stream loop that re-processes every Nth frame for smooth performance with duplicate suppression.
 
@@ -91,7 +93,7 @@ Built in compliance with the in-repo PRD (`Face_Attendance_System_PRD.md`) and p
 
 ---
 
-## Problem Statement and Objectives
+## 🎯 Problem Statement and Objectives
 
 **Problem.** Manual attendance marking is time-consuming, allows proxy attendance (one person marking for another), and produces records that are hard to audit or analyze. Classrooms, training sessions, and small offices need a lightweight, low-cost system that recognizes known individuals automatically from a standard webcam — no dedicated biometric hardware (PRD Section 2, `statement.md`).
 
@@ -105,7 +107,7 @@ Built in compliance with the in-repo PRD (`Face_Attendance_System_PRD.md`) and p
 
 ---
 
-## Computer Vision Concepts
+## 👁️ Computer Vision Concepts
 
 | Concept | Why it is used | How it works (briefly) | How this project applies it |
 | ------- | -------------- | ---------------------- | --------------------------- |
@@ -122,7 +124,7 @@ No CNN classifier training, image segmentation, or general object detection is i
 
 ---
 
-## Technology Stack
+## 🛠️ Technology Stack
 
 | Layer | Technology | Version | Role |
 | ----- | ---------- | ------- | ---- |
@@ -142,7 +144,7 @@ SQLite was chosen over CSV (per PRD Section 8) for atomic duplicate-checked writ
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 Facial Attendance System/
@@ -188,48 +190,74 @@ Facial Attendance System/
 
 ---
 
-## System Architecture
+## 🏗️ System Architecture
 
 Three layers with a strict downward dependency: the presentation layer never touches storage directly; all data access flows through the service layer.
 
-```
-┌───────────────────────────────────────────────────────────────┐
-│  PRESENTATION LAYER — app.py (Streamlit)                      │
-│  ┌─────────────┐  ┌──────────────┐  ┌────────────┐  ┌────────┐ │
-│  │ Kiosk       │  │ Enrollment   │  │ Reports &  │  │ Set-   │ │
-│  │ Scanner     │  │ & Directory  │  │ Logs       │  │ tings  │ │
-│  └─────────────┘  └──────────────┘  └────────────┘  └────────┘ │
-└──────────────────────────────┬────────────────────────────────┘
-                               │
-┌──────────────────────────────▼────────────────────────────────┐
-│  SERVICE LAYER — services/                                    │
-│  ┌──────────────────┐ ┌──────────────────┐ ┌────────────────┐ │
-│  │ face_service     │ │ enrollment_      │ │ attendance_    │ │
-│  │ Module 1: detect │ │ service          │ │ service        │ │
-│  │ + 128-d encode   │ │ Module 2: CRUD   │ │ Module 3: log  │ │
-│  │                  │ │ + match (≤ 0.6)  │ │ + report       │ │
-│  └──────────────────┘ └──────────────────┘ └────────────────┘ │
-└──────────────────────────────┬────────────────────────────────┘
-                               │
-┌──────────────────────────────▼────────────────────────────────┐
-│  DATA LAYER                                                   │
-│  SQLite attendance.db         │  data/known_faces_images/     │
-│  (known_faces + attendance)   │  (reference photos + avatars) │
-│  logs/app.log (audit trail)   │                               │
-└───────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph UI["Presentation Layer · app.py"]
+        direction LR
+        Kiosk["Kiosk Scanner"]
+        EnrollTab["Enrollment & Directory"]
+        ReportsTab["Reports & Logs"]
+        SettingsTab["Settings"]
+    end
+
+    subgraph SVC["Service Layer · services/"]
+        direction LR
+        M1["face_service<br/>Detect + 128-D encode"]
+        M2["enrollment_service<br/>CRUD + matching"]
+        M3["attendance_service<br/>Logging + reports"]
+    end
+
+    subgraph DATA["Data Layer"]
+        direction LR
+        DB[("attendance.db<br/>known_faces · attendance")]
+        Photos["known_faces_images/<br/>photos + avatars"]
+        AppLog["app.log<br/>audit trail"]
+    end
+
+    Kiosk --> M1
+    EnrollTab --> M1
+    Kiosk --> M2
+    EnrollTab --> M2
+    Kiosk --> M3
+    ReportsTab --> M3
+    SettingsTab --> DATA
+    M1 --> M2
+    M2 --> M3
+    M2 --> DB
+    M2 --> Photos
+    M3 --> DB
+
+    classDef ui fill:#e8eefc,stroke:#4f46e5,color:#1e293b;
+    classDef svc fill:#f3effe,stroke:#7c3aed,color:#1e293b;
+    classDef data fill:#fdf2f8,stroke:#db2777,color:#1e293b;
+    class Kiosk,EnrollTab,ReportsTab,SettingsTab ui;
+    class M1,M2,M3 svc;
+    class DB,Photos,AppLog data;
 ```
 
 Module 1 feeds Module 2 (vectors in, identities out); Module 2 feeds Module 3 (identities in, records out). Every service logs through the shared `config.log` handler.
 
 ---
 
-## Workflow
+## 🔄 Workflow
 
 **Enrollment flow.** Admin enters a name and captures or uploads a photo. Module 1 detects and encodes the face. Module 2 stores the encoding in `known_faces` and saves the reference photo plus avatar thumbnail to disk.
 
 **Recognition and attendance flow.** A frame arrives from snapshot, upload, or live stream. Module 1 detects all faces and encodes each. Module 2 compares every encoding against all stored references and assigns the best match under the threshold, else `Unknown`. Module 3 checks for an existing `(name, date)` record — inserting a new row on first sighting, suppressing duplicates with the original check-in time otherwise. The UI overlays color-coded boxes with name and match-score badges and appends fresh check-ins to the live feed.
 
 **Reporting flow.** Admin selects a preset or custom range plus an optional member filter. Module 3 queries the database into Pandas, derives the present/absent roster and summary statistics, and renders tables, KPI cards, charts, and a downloadable CSV.
+
+```mermaid
+flowchart LR
+    Capture["Capture<br/>camera · upload · stream"] --> Detect["Detect<br/>HOG · CNN · Haar @ 0.25x"] --> Encode["Encode<br/>128-D embedding"] --> Match["Match<br/>Euclidean ≤ 0.6"] --> Log["Log<br/>dedup by name + date"] --> Present["Present<br/>overlay · feed · KPIs · CSV"]
+
+    classDef stage fill:#f1f5f9,stroke:#64748b,color:#0f172a;
+    class Capture,Detect,Encode,Match,Log,Present stage;
+```
 
 | Stage | Input | Operation | Output |
 | ----- | ----- | --------- | ------ |
@@ -242,7 +270,7 @@ Module 1 feeds Module 2 (vectors in, identities out); Module 2 feeds Module 3 (i
 
 ---
 
-## Implementation Details
+## 🧠 Implementation Details
 
 <details>
 <summary><strong>Module 1 — Face detection and encoding</strong> (<code>services/face_service.py</code>)</summary>
@@ -287,7 +315,7 @@ Module 1 feeds Module 2 (vectors in, identities out); Module 2 feeds Module 3 (i
 
 ---
 
-## Database Schema
+## 🗄️ Database Schema
 
 Defined in `database/db_setup.py` (PRD Section 10). Connections use the `sqlite3.Row` factory; `init_db()` runs idempotently at every startup.
 
@@ -314,7 +342,7 @@ Indexes: `idx_known_faces_name`, `idx_attendance_date`, `idx_attendance_name`. T
 
 ---
 
-## Installation
+## ⚙️ Installation
 
 Prerequisites: Python 3.10+, Git, and optionally a webcam (photo upload works without one).
 
@@ -352,7 +380,7 @@ Key settings in `config.py`:
 
 ---
 
-## Usage
+## ▶️ Usage
 
 ```bash
 # Launch the portal (opens at http://localhost:8501)
@@ -368,7 +396,7 @@ To reproduce results end to end: enroll at least one member under good frontal l
 
 ---
 
-## Input and Output
+## 📥 Input and Output
 
 **Inputs.**
 
@@ -396,7 +424,7 @@ Invalid frames, zero-face images, camera failures, and corrupt uploads produce u
 
 ---
 
-## Results
+## 📊 Results
 
 No screenshots or sample outputs are bundled in this repository (`docs/` is empty; image and log artifacts are runtime-generated and gitignored), so none are embedded here. The table below describes behavior verified through the test suite and code paths:
 
@@ -413,7 +441,7 @@ No accuracy, precision, recall, FPS, or timing figures are claimed — none are 
 
 ---
 
-## Testing
+## 🧪 Testing
 
 13 tests, runnable offline with the OpenCV backend (no dlib, camera, or network required):
 
@@ -430,7 +458,7 @@ python -m pytest -v     # verbose per-test output
 
 ---
 
-## Limitations
+## ⚠️ Limitations
 
 Constraints supported by the code and specification — stated plainly, without invention:
 
@@ -444,7 +472,7 @@ Constraints supported by the code and specification — stated plainly, without 
 
 ---
 
-## Future Work
+## 🔮 Future Work
 
 Realistic extensions, kept separate from shipped functionality:
 
@@ -459,7 +487,7 @@ Realistic extensions, kept separate from shipped functionality:
 
 ---
 
-## Learning Outcomes
+## 🎓 Learning Outcomes
 
 Concepts directly exercised by this implementation:
 
@@ -473,7 +501,7 @@ Concepts directly exercised by this implementation:
 
 ---
 
-## References
+## 📚 References
 
 Only sources connected to artifacts actually used or cited in this repository:
 
@@ -488,7 +516,7 @@ Only sources connected to artifacts actually used or cited in this repository:
 
 ---
 
-## Author
+## 👤 Author
 
 | Field | Details |
 | ----- | ------- |
