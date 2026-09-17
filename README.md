@@ -17,7 +17,7 @@
 [![SQLite](https://img.shields.io/badge/SQLite-Built_in-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](.)
 [![Pytest](https://img.shields.io/badge/Pytest-7.0+-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)](.)
 
-*Developed as a Computer Vision assignment for **VITyarthi** at **VIT Bhopal**. This README documents the actual implementation in this repository — no invented features or metrics.*
+*Developed by **Mausam Kar** as a Computer Vision assignment for **VITyarthi** at **VIT Bhopal**. This README documents the actual implementation in this repository — no invented features or metrics.*
 
 </div>
 
@@ -25,27 +25,29 @@
 
 ## 📑 Contents
 
-- [Overview](#overview)
-- [Assignment Details](#assignment-details)
-- [Key Features](#key-features)
-- [Problem Statement and Objectives](#problem-statement-and-objectives)
-- [Computer Vision Concepts](#computer-vision-concepts)
-- [Technology Stack](#technology-stack)
-- [Project Structure](#project-structure)
-- [System Architecture](#system-architecture)
-- [Workflow](#workflow)
-- [Implementation Details](#implementation-details)
-- [Database Schema](#database-schema)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Input and Output](#input-and-output)
-- [Results](#results)
-- [Testing](#testing)
-- [Limitations](#limitations)
-- [Future Work](#future-work)
-- [Learning Outcomes](#learning-outcomes)
-- [References](#references)
-- [Author](#author)
+| # | Section | Description |
+| - | ------- | ----------- |
+| 1 | [🔭 Overview](#-overview) | What the system does, who it serves, and how the four app tabs fit together |
+| 2 | [🎓 Assignment Details](#-assignment-details) | Institution, event, specification sources, and submission status |
+| 3 | [✨ Key Features](#-key-features) | Kiosk scanner, enrollment, attendance intelligence, and reliability |
+| 4 | [🎯 Problem Statement and Objectives](#-problem-statement-and-objectives) | The manual-attendance problem and the five implemented objectives |
+| 5 | [👁️ Computer Vision Concepts](#-computer-vision-concepts) | Detection, embeddings, matching, and preprocessing techniques used |
+| 6 | [🛠️ Technology Stack](#-technology-stack) | Languages, libraries, storage, and tooling with versions and roles |
+| 7 | [📁 Project Structure](#-project-structure) | Annotated directory tree and file responsibilities |
+| 8 | [🏗️ System Architecture](#-system-architecture) | Three-layer design with a Mermaid architecture diagram |
+| 9 | [🔄 Workflow](#-workflow) | Enrollment, recognition, and reporting flows with a Mermaid pipeline |
+| 10 | [🧠 Implementation Details](#-implementation-details) | Module-by-module internals (expandable sections) |
+| 11 | [🗄️ Database Schema](#-database-schema) | `known_faces` and `attendance` tables, indexes, and constraints |
+| 12 | [⚙️ Installation](#-installation) | Environment setup, dependencies, and configuration reference |
+| 13 | [▶️ Usage](#-usage) | Launching the portal and walking through a typical session |
+| 14 | [📥 Input and Output](#-input-and-output) | Supported inputs and every output the system produces |
+| 15 | [📊 Results](#-results) | Verified behavior and how to generate your own evidence |
+| 16 | [🧪 Testing](#-testing) | The 13-test pytest suite and what each file covers |
+| 17 | [⚠️ Limitations](#-limitations) | Honest constraints supported by the code and specification |
+| 18 | [🔮 Future Work](#-future-work) | Realistic extensions, separated from shipped functionality |
+| 19 | [🎓 Learning Outcomes](#-learning-outcomes) | CV and engineering concepts exercised by this implementation |
+| 20 | [📚 References](#-references) | Documentation for every library and spec actually used |
+| 21 | [👤 Author](#-author) | Developer, institution, and submission information |
 
 ---
 
@@ -54,6 +56,8 @@
 Manual attendance — roll calls and sign-in sheets — is slow, vulnerable to proxy marking, and difficult to audit. This project replaces it with a **desktop/web-based Face Recognition Attendance System**: an enrolled user faces a webcam (or uploads a photo), and the system detects faces, encodes each into a **128-dimensional embedding**, matches it against enrolled references using **Euclidean distance** (threshold `0.6`), and logs `{name, date, time, confidence}` into SQLite with **per-day duplicate prevention**.
 
 Results are shown with annotated bounding boxes, name badges with match confidence, a live check-in feed, KPI cards, trend charts, CSV export, and a manual admin override — all inside a four-tab Streamlit application:
+
+### 🖥️ Application Tabs
 
 | Tab | Purpose |
 | --- | ------- |
@@ -73,6 +77,7 @@ Built in compliance with the in-repo PRD (`Face_Attendance_System_PRD.md`) and p
 | Institution | VIT Bhopal |
 | Assignment | Computer Vision |
 | Event | VITyarthi — Build Your Own Project |
+| Submitted By | **Mausam Kar** |
 | Project Title | Face Recognition–Based Attendance System |
 | Specification | `Face_Attendance_System_PRD.md` (v1.0), `statement.md` |
 | Core Technologies | Python, OpenCV, Streamlit, NumPy, Pandas, Matplotlib, Altair, SQLite, Pytest |
@@ -83,21 +88,33 @@ Built in compliance with the in-repo PRD (`Face_Attendance_System_PRD.md`) and p
 
 ## ✨ Key Features
 
-**Multi-mode kiosk scanner.** Three check-in paths share one recognition pipeline: instant webcam snapshots with real-time bounding boxes and match-confidence badges, single/group photo upload (every face in the frame is matched independently), and a continuous OpenCV live-stream loop that re-processes every Nth frame for smooth performance with duplicate suppression.
+### 📷 Multi-Mode Kiosk Scanner
 
-**Enrollment with quality control.** Registration requires exactly one clearly visible face — the validator rejects empty frames and multi-face photos with actionable messages. Members can add extra reference photos (improving robustness across lighting and angles), get auto-generated avatar thumbnails, and appear in a searchable directory with add-photo and delete actions.
+Three check-in paths share one recognition pipeline: instant webcam snapshots with real-time bounding boxes and match-confidence badges, single/group photo upload (every face in the frame is matched independently), and a continuous OpenCV live-stream loop that re-processes every Nth frame for smooth performance with duplicate suppression.
 
-**Attendance intelligence.** Filter records by Today, Yesterday, Last 7 Days, This Month, All Time, or a custom range plus per-member filtering. KPI cards show enrolled total, present count, absent count, and attendance rate. A dedicated absent roster names everyone unrecorded on a given date. Daily-volume and per-member frequency charts, one-click CSV export, and a manual admin override round out reporting.
+### 🧑 Enrollment with Quality Control
 
-**Reliability by design.** Same-day re-recognition returns *"Already marked present today"* instead of a duplicate row (enforced by both application logic and a `UNIQUE(name, date)` constraint). `Unknown` faces are never logged. The pipeline never crashes on empty frames, missing faces, camera disconnects, or corrupt uploads. A dual backend — `face_recognition` (dlib) when installed, automatic fallback to a built-in OpenCV Haar + handcrafted 128-d embedding otherwise — keeps the app runnable on any machine, including Python versions without dlib wheels.
+Registration requires exactly one clearly visible face — the validator rejects empty frames and multi-face photos with actionable messages. Members can add extra reference photos (improving robustness across lighting and angles), get auto-generated avatar thumbnails, and appear in a searchable directory with add-photo and delete actions.
+
+### 📊 Attendance Intelligence
+
+Filter records by Today, Yesterday, Last 7 Days, This Month, All Time, or a custom range plus per-member filtering. KPI cards show enrolled total, present count, absent count, and attendance rate. A dedicated absent roster names everyone unrecorded on a given date. Daily-volume and per-member frequency charts, one-click CSV export, and a manual admin override round out reporting.
+
+### 🛡️ Reliability by Design
+
+Same-day re-recognition returns *"Already marked present today"* instead of a duplicate row (enforced by both application logic and a `UNIQUE(name, date)` constraint). `Unknown` faces are never logged. The pipeline never crashes on empty frames, missing faces, camera disconnects, or corrupt uploads. A dual backend — `face_recognition` (dlib) when installed, automatic fallback to a built-in OpenCV Haar + handcrafted 128-d embedding otherwise — keeps the app runnable on any machine, including Python versions without dlib wheels.
 
 ---
 
 ## 🎯 Problem Statement and Objectives
 
-**Problem.** Manual attendance marking is time-consuming, allows proxy attendance (one person marking for another), and produces records that are hard to audit or analyze. Classrooms, training sessions, and small offices need a lightweight, low-cost system that recognizes known individuals automatically from a standard webcam — no dedicated biometric hardware (PRD Section 2, `statement.md`).
+### ❓ Problem Statement
 
-**Objectives** (PRD Section 3, all implemented):
+Manual attendance marking is time-consuming, allows proxy attendance (one person marking for another), and produces records that are hard to audit or analyze. Classrooms, training sessions, and small offices need a lightweight, low-cost system that recognizes known individuals automatically from a standard webcam — no dedicated biometric hardware (PRD Section 2, `statement.md`).
+
+### ✅ Objectives
+
+All five objectives from PRD Section 3 are implemented:
 
 1. Automatically detect and recognize enrolled faces from a webcam feed or uploaded image.
 2. Let an admin enroll new users by capturing or uploading reference face images.
@@ -245,11 +262,17 @@ Module 1 feeds Module 2 (vectors in, identities out); Module 2 feeds Module 3 (i
 
 ## 🔄 Workflow
 
-**Enrollment flow.** Admin enters a name and captures or uploads a photo. Module 1 detects and encodes the face. Module 2 stores the encoding in `known_faces` and saves the reference photo plus avatar thumbnail to disk.
+### 1️⃣ Enrollment Flow
 
-**Recognition and attendance flow.** A frame arrives from snapshot, upload, or live stream. Module 1 detects all faces and encodes each. Module 2 compares every encoding against all stored references and assigns the best match under the threshold, else `Unknown`. Module 3 checks for an existing `(name, date)` record — inserting a new row on first sighting, suppressing duplicates with the original check-in time otherwise. The UI overlays color-coded boxes with name and match-score badges and appends fresh check-ins to the live feed.
+Admin enters a name and captures or uploads a photo. Module 1 detects and encodes the face. Module 2 stores the encoding in `known_faces` and saves the reference photo plus avatar thumbnail to disk.
 
-**Reporting flow.** Admin selects a preset or custom range plus an optional member filter. Module 3 queries the database into Pandas, derives the present/absent roster and summary statistics, and renders tables, KPI cards, charts, and a downloadable CSV.
+### 2️⃣ Recognition and Attendance Flow
+
+A frame arrives from snapshot, upload, or live stream. Module 1 detects all faces and encodes each. Module 2 compares every encoding against all stored references and assigns the best match under the threshold, else `Unknown`. Module 3 checks for an existing `(name, date)` record — inserting a new row on first sighting, suppressing duplicates with the original check-in time otherwise. The UI overlays color-coded boxes with name and match-score badges and appends fresh check-ins to the live feed.
+
+### 3️⃣ Reporting Flow
+
+Admin selects a preset or custom range plus an optional member filter. Module 3 queries the database into Pandas, derives the present/absent roster and summary statistics, and renders tables, KPI cards, charts, and a downloadable CSV.
 
 ```mermaid
 flowchart LR
@@ -273,7 +296,7 @@ flowchart LR
 ## 🧠 Implementation Details
 
 <details>
-<summary><strong>Module 1 — Face detection and encoding</strong> (<code>services/face_service.py</code>)</summary>
+<summary><strong>1️⃣ Module 1 — Face detection and encoding</strong> (<code>services/face_service.py</code>)</summary>
 
 <br>
 
@@ -287,7 +310,7 @@ flowchart LR
 </details>
 
 <details>
-<summary><strong>Module 2 — Enrollment and matching</strong> (<code>services/enrollment_service.py</code>)</summary>
+<summary><strong>2️⃣ Module 2 — Enrollment and matching</strong> (<code>services/enrollment_service.py</code>)</summary>
 
 <br>
 
@@ -300,7 +323,7 @@ flowchart LR
 </details>
 
 <details>
-<summary><strong>Module 3 — Logging, roster, and analytics</strong> (<code>services/attendance_service.py</code>)</summary>
+<summary><strong>3️⃣ Module 3 — Logging, roster, and analytics</strong> (<code>services/attendance_service.py</code>)</summary>
 
 <br>
 
@@ -319,7 +342,9 @@ flowchart LR
 
 Defined in `database/db_setup.py` (PRD Section 10). Connections use the `sqlite3.Row` factory; `init_db()` runs idempotently at every startup.
 
-**`known_faces`** — one row per reference photo:
+### 🗂️ Table: `known_faces`
+
+One row per reference photo:
 
 | Column | Type | Notes |
 | ------ | ---- | ----- |
@@ -328,7 +353,9 @@ Defined in `database/db_setup.py` (PRD Section 10). Connections use the `sqlite3
 | `encoding` | BLOB NOT NULL | Pickled 128-d NumPy array |
 | `enrolled_on` | TIMESTAMP | Defaults to `CURRENT_TIMESTAMP` |
 
-**`attendance`** — one row per person per day:
+### 📝 Table: `attendance`
+
+One row per person per day:
 
 | Column | Type | Notes |
 | ------ | ---- | ----- |
@@ -390,15 +417,17 @@ python -m streamlit run app.py
 python -m pytest
 ```
 
-**Typical session.** First, adjust the sidebar engine settings (backend, matching threshold, detection model) and confirm the active backend badge. Then open **Kiosk Scanner** and check in via webcam snapshot, photo upload, or the live feed toggle — recognized faces are annotated and appear in the **Today's Check-ins** feed. Next, use **Face Enrollment** to register members: enter a name, capture or upload a photo, wait for the single-face confirmation and preview, then complete enrollment. Finally, open **Reports & Logs** to filter by preset or member, review KPI cards and the present/absent lists, inspect the charts, export CSV, or add a manual entry. **Settings** exposes database statistics and a searchable application log viewer with download.
+### 🖥️ Typical Session
 
-To reproduce results end to end: enroll at least one member under good frontal lighting, scan the same face through each kiosk mode, and verify the annotated output plus the Tab 3 records.
+First, adjust the sidebar engine settings (backend, matching threshold, detection model) and confirm the active backend badge. Then open **Kiosk Scanner** and check in via webcam snapshot, photo upload, or the live feed toggle — recognized faces are annotated and appear in the **Today's Check-ins** feed. Next, use **Face Enrollment** to register members: enter a name, capture or upload a photo, wait for the single-face confirmation and preview, then complete enrollment. Finally, open **Reports & Logs** to filter by preset or member, review KPI cards and the present/absent lists, inspect the charts, export CSV, or add a manual entry. **Settings** exposes database statistics and a searchable application log viewer with download.
+
+> 💡 **Reproducing results end to end:** enroll at least one member under good frontal lighting, scan the same face through each kiosk mode, and verify the annotated output plus the Tab 3 records.
 
 ---
 
 ## 📥 Input and Output
 
-**Inputs.**
+### 📥 Inputs
 
 | Type | Formats / constraints | Notes |
 | ---- | --------------------- | ----- |
@@ -408,9 +437,9 @@ To reproduce results end to end: enroll at least one member under good frontal l
 | Member name | Non-empty text | Sanitized to alphanumeric, `-`, `_` directory names |
 | Report filters | Preset, custom date range, member name | Today through All Time plus arbitrary ranges |
 
-Invalid frames, zero-face images, camera failures, and corrupt uploads produce user-facing warnings — never a crash.
+> ⚠️ Invalid frames, zero-face images, camera failures, and corrupt uploads produce user-facing warnings — never a crash.
 
-**Outputs.**
+### 📤 Outputs
 
 | Output | Form | Meaning |
 | ------ | ---- | ------- |
@@ -426,7 +455,7 @@ Invalid frames, zero-face images, camera failures, and corrupt uploads produce u
 
 ## 📊 Results
 
-No screenshots or sample outputs are bundled in this repository (`docs/` is empty; image and log artifacts are runtime-generated and gitignored), so none are embedded here. The table below describes behavior verified through the test suite and code paths:
+> 📌 No screenshots or sample outputs are bundled in this repository (`docs/` is empty; image and log artifacts are runtime-generated and gitignored), so none are embedded here. The table below describes behavior verified through the test suite and code paths:
 
 | Check | Demonstrates | Observable behavior |
 | ----- | ------------ | ------------------- |
@@ -437,7 +466,7 @@ No screenshots or sample outputs are bundled in this repository (`docs/` is empt
 | Daily roster | Correct present/absent split | Fixture with 3 enrolled and 1 recorded yields 1 present, 2 absent |
 | Filters, summary, CSV export | Queryable, exportable records | Date/person/range filters return expected subsets; CSV contains enrolled names |
 
-No accuracy, precision, recall, FPS, or timing figures are claimed — none are measured in this repository. To produce evidence, enroll two or three members, scan via each kiosk mode, and save the annotated results plus report views under `docs/`.
+> 📌 No accuracy, precision, recall, FPS, or timing figures are claimed — none are measured in this repository. To produce evidence, enroll two or three members, scan via each kiosk mode, and save the annotated results plus report views under `docs/`.
 
 ---
 
@@ -524,7 +553,8 @@ Only sources connected to artifacts actually used or cited in this repository:
 | Event | VITyarthi — Build Your Own Project |
 | Domain | Computer Vision assignment |
 | Project | Face Recognition–Based Attendance System |
-| Submitted by | Student submitter (no author identity is recorded in the analyzed files, so none is stated) |
+| Submitted By | **Mausam Kar** |
+| GitHub | [Mausam5055](https://github.com/Mausam5055) |
 
 <div align="center">
 
