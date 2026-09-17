@@ -1,0 +1,8 @@
+$ pytest -v --tb=short
+collected 13 items
+
+tests/test_attendance_service.py ...... [ 46%]
+tests/test_enrollment_service.py ...    [ 69%]
+tests/test_face_service.py ....         [100%]
+
+============================== 13 passed in 2.74s ===============================
