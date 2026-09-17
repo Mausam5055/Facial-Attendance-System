@@ -5,7 +5,7 @@
 ![Status](https://img.shields.io/badge/Status-Submitted-success?style=for-the-badge)
 ![Assignment](https://img.shields.io/badge/Assignment-Computer_Vision-blueviolet?style=for-the-badge)
 ![Institution](https://img.shields.io/badge/Institution-VIT_Bhopal-blue?style=for-the-badge)
-![Event](https://img.shields.io/badge/Event-VITRYTHI_(V--I--T--Y--R--T--H--I)-orange?style=for-the-badge)
+![Event](https://img.shields.io/badge/Event-VITyarthi-orange?style=for-the-badge)
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)
 ![OpenCV](https://img.shields.io/badge/OpenCV-4.8%2B-5C3EE8?style=flat-square&logo=opencv&logoColor=white)
@@ -22,7 +22,7 @@
 ![Image Processing](https://img.shields.io/badge/Image_Processing-OpenCV-2563EB?style=flat-square)
 ![Face Detection](https://img.shields.io/badge/Face_Detection-HOG_%7C_CNN_%7C_Haar-0EA5E9?style=flat-square)
 
-**Developed as a Computer Vision assignment for VITRYTHI (V-I-T-Y-R-T-H-I) at VIT Bhopal — submitted by me.** Built in compliance with the project PRD (`Face_Attendance_System_PRD.md`) and project statement (`statement.md`). This README documents the actual implementation found in this repository — no invented features or metrics.
+**Developed as a Computer Vision assignment for VITyarthi at VIT Bhopal — submitted by me.** Built in compliance with the project PRD (`Face_Attendance_System_PRD.md`) and project statement (`statement.md`). This README documents the actual implementation found in this repository — no invented features or metrics.
 
 ---
 
@@ -75,7 +75,7 @@ This project is a **desktop/web-based Face Recognition Attendance System**. Inst
 | ----- | ------- |
 | Institution | VIT Bhopal |
 | Assignment | Computer Vision |
-| Event / Assignment Name | VITRYTHI (V-I-T-Y-R-T-H-I) — *Build Your Own Project / VITyarthi* |
+| Event / Assignment Name | VITyarthi — *Build Your Own Project* |
 | Project Title | Face Recognition–Based Attendance System (Face Attendance Portal) |
 | Problem Source | `statement.md` + `Face_Attendance_System_PRD.md` (v1.0) in this repo |
 | Technologies | Python, OpenCV, Streamlit, NumPy, Pandas, Matplotlib, Altair, SQLite, Pytest (optional: `face_recognition` / dlib) |
@@ -579,7 +579,7 @@ Only libraries/specs actually used or cited in the repo — no fabricated papers
 | Field | Details |
 | ----- | ------- |
 | Institution | VIT Bhopal |
-| Event | VITRYTHI (V-I-T-Y-R-T-H-I) — Build Your Own Project (VITyarthi) |
+| Event | VITyarthi — Build Your Own Project |
 | Domain | Computer Vision assignment |
 | Project | Face Recognition–Based Attendance System |
 | Submitted by | *Me (student submitter — name/registration withheld; no author identity was found in the analyzed files, so none is invented)* |
