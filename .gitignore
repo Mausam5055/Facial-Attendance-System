@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.streamlit/
+database/*.db
+logs/app.log
+data/known_faces_images/*.jpg
+data/known_faces_images/*.png
+.DS_Store
